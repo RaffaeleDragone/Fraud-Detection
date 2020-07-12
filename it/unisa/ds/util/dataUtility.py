@@ -50,6 +50,7 @@ def normalize_dataset(df):
     #Ci sono altre operazioni che possono essere effettuate. Ho trovate alcune discussioni :
     #https://www.kaggle.com/netzone/eda-and-fraud-detection
     #https://www.kaggle.com/stark10war/fraud-detection-eda-and-modelling
+    #https://www.kaggle.com/aadilrafeeque/exploratory-data-analysis-and-fraud-prediction
     #Diciamo che quelle che hanno nel titolo "EDA" fanno proprio focus sulla pulizia dei dati
 
 
