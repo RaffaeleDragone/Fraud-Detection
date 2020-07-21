@@ -68,9 +68,10 @@ df_normalized = normalize_dataset(dataFrame)
 print(df_normalized.head(10))
 
 
-#dataFrame.hist(bins=50, figsize=(20,15))
-#plt.show()
+dataFrame.hist(bins=50, figsize=(20,15))
+plt.show()
 
-
+#Fase di Feature Selection che mi sembra fatta bene e anche con ragionamenti non da astrologi :
+# https://www.kaggle.com/georgepothur/4-financial-fraud-detection-xgboost
 
 
