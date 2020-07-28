@@ -157,6 +157,35 @@ def dataCleaning(df):
     dfOutDiz[3]=Y
     return dfOutDiz
 
+def dataCleaningAndEngineering(df):
+    X = df.loc[(df.type == 'CASH_OUT') | (df.type == 'TRANSFER')]
+    randomState = 5
+    np.random.seed(randomState)
+    Y = X['isFraud']
+    del X['isFraud']
+
+    del X['nameDest']
+    del X['nameOrig']
+    del X['isFlaggedFraud']
+
+    X['errorBalanceOrig'] = X.newbalanceOrig + X.amount - X.oldbalanceOrg
+    X['errorBalanceDest'] = X.oldbalanceDest + X.amount - X.newbalanceDest
+
+    X.loc[X.type == 'TRANSFER', 'type'] = 0
+    X.loc[X.type == 'CASH_OUT', 'type'] = 1
+    X.type = X.type.astype(int)
+    #print(X.head())
+
+    print(X)
+    X_fraud = X.loc[Y == 1]
+    X_nonFraud = X.loc[Y == 0]
+
+    dfOutDiz = {}
+    dfOutDiz[0]=X
+    dfOutDiz[1]=X_fraud
+    dfOutDiz[2]=X_nonFraud
+    dfOutDiz[3]=Y
+    return dfOutDiz
 
 
 
