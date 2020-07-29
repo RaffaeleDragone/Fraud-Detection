@@ -13,7 +13,7 @@ dataFrameFull = du.dataCleaningAndEngineering(dataFrame)
 dataFrameWithoutLabel = dataFrameFull[0]
 label = dataFrameFull[3]
 
-X_train, X_test, y_train, y_test = train_test_split(dataFrameWithoutLabel, label, test_size=0.2, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(dataFrameWithoutLabel, label, test_size=0.2, random_state=0, stratify= label)
 '''
 def accuracy_dectree(depth):
     # Build and train model
@@ -85,16 +85,24 @@ def plot_cross_validation_on_trees(depths, cv_scores_mean, cv_scores_std, accura
     ax.set_ylim(ylim)
     ax.set_xticks(depths)
     ax.legend()
+    plt.show()
 
 
 # fitting trees of depth 1 to 24
-sm_tree_depths = range(1, 25)
+sm_tree_depths = range(1, 20)
 sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores = run_cross_validation_on_trees(X_train, y_train,
                                                                                         sm_tree_depths)
 
 # plotting accuracy
 plot_cross_validation_on_trees(sm_tree_depths, sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores,
                                'Accuracy per decision tree depth on training data')
+
+idx_max = sm_cv_scores_mean.argmax()
+sm_best_tree_depth = sm_tree_depths[idx_max]
+sm_best_tree_cv_score = sm_cv_scores_mean[idx_max]
+sm_best_tree_cv_score_std = sm_cv_scores_std[idx_max]
+print('The depth-{} tree achieves the best mean cross-validation accuracy {} +/- {}% on training dataset'.format(
+      sm_best_tree_depth, round(sm_best_tree_cv_score*100,5), round(sm_best_tree_cv_score_std*100, 5)))
 
 #Confusion Matrix
 
