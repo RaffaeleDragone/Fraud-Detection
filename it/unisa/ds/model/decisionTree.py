@@ -87,6 +87,24 @@ def run_cross_validation_on_trees(X, y, tree_depths, cv=5, scoring='accuracy'):
     accuracy_scores = np.array(accuracy_scores)
     return cv_scores_mean, cv_scores_std, accuracy_scores
 
+def run_cross_validation_on_random_forest(X, y, tree_depths, cv=5, scoring='accuracy'):
+
+    cv_scores_list = []
+    cv_scores_std = []
+    cv_scores_mean = []
+    accuracy_scores = []
+    for depth in tree_depths:
+        print("Depth : ",str(depth),"\n")
+        tree_model = RandomForestClassifier(max_depth=depth)
+        cv_scores = cross_val_score(tree_model, X, y, cv=cv, scoring=scoring)
+        cv_scores_list.append(cv_scores)
+        cv_scores_mean.append(cv_scores.mean())
+        cv_scores_std.append(cv_scores.std())
+        accuracy_scores.append(tree_model.fit(X, y).score(X, y))
+    cv_scores_mean = np.array(cv_scores_mean)
+    cv_scores_std = np.array(cv_scores_std)
+    accuracy_scores = np.array(accuracy_scores)
+    return cv_scores_mean, cv_scores_std, accuracy_scores
 
 # function for plotting cross-validation results
 def plot_cross_validation_on_trees(depths, cv_scores_mean, cv_scores_std, accuracy_scores, title):
@@ -162,10 +180,14 @@ def cross_validation_split(type_model):
 
 
 
-decision_tree_model(5)
+#decision_tree_model(5)
 #cross_validation_split(0)
-random_forest_model(5,50)
+#random_forest_model(5,50)
 # fitting trees of depth 1 to 24
 #sm_tree_depths = range(1, 20)
 #sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores = run_cross_validation_on_trees(X_train, y_train,
 #                                                                                        sm_tree_depths)
+
+sm_tree_depths = range(9, 12)
+sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores = run_cross_validation_on_random_forest(X_train, y_train,sm_tree_depths)
+plot_cross_validation_on_trees(sm_tree_depths, sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores, "Cross Validation Random Forest")
