@@ -2,6 +2,7 @@
 import os
 
 #import kaggle
+import kaggle
 import pandas as pd
 pd.set_option('display.float_format', lambda x: '%.5f' % x)
 pd.set_option('display.max_rows', 500)
@@ -14,8 +15,8 @@ import matplotlib.pyplot as plt
 
 def download_and_unzip_dataset():
     print("download")
-    #kaggle.api.authenticate()
-    #kaggle.api.dataset_download_files('ntnu-testimon/paysim1', path='./datasets', unzip=True)
+    kaggle.api.authenticate()
+    kaggle.api.dataset_download_files('ntnu-testimon/paysim1', path='./datasets', unzip=True)
 
 def load_paysim_data():
     csv_path = os.path.join('../dataset/', 'PS_20174392719_1491204439457_log.csv')
@@ -32,8 +33,12 @@ def information_dataframe(dataFrame):
     print('Transazioni Fraudolente CASH_OUT', len(dataFrame.loc[(dataFrame.isFraud == 1) & (dataFrame.type == 'CASH_OUT')]))
 
     print('Transazioni Flagged', len(dataFrame.loc[(dataFrame.isFlaggedFraud == 1)]))
+
     print('\nThe type of transactions in which isFlaggedFraud is set: \ {}'.format(
-        list(dataFrame.loc[dataFrame.isFlaggedFraud == 1].type.drop_duplicates())))  # only 'TRANSFER'
+        list(dataFrame.loc[dataFrame.isFlaggedFraud == 1].type.drop_duplicates())))
+
+
+
 
     #Nella guida fa vedere come isFlaggedFraud non è correlato con nessun altro campo. Quindi dice che poiché tra l'altro ci sono solo 16 record con tale valore lo scarta
     #Decidiamo poi se metterci questo ragionamento
@@ -157,10 +162,38 @@ def dataCleaning(df):
     dfOutDiz[3]=Y
     return dfOutDiz
 
-def dataCleaningAndEngineering(df):
-    X = df.loc[(df.type == 'CASH_OUT') | (df.type == 'TRANSFER')]
+
+def returnDataWithoutCleaning(df):
+    X = df
     randomState = 5
     np.random.seed(randomState)
+    Y = X['isFraud']
+    #del X['isFraud']
+
+   # del X['nameDest']
+   # del X['nameOrig']
+   # del X['isFlaggedFraud']
+    X.loc[X.type == 'TRANSFER', 'type'] = 0
+    X.loc[X.type == 'CASH_OUT', 'type'] = 1
+    X.loc[X.type == 'PAYMENT', 'type'] = 2
+    X.loc[X.type == 'CASH_IN', 'type'] = 3
+    X.loc[X.type == 'DEBIT', 'type'] = 4
+    #X.type = X.type.astype(int)
+    # print(X.head())
+    X_fraud = X.loc[Y == 1]
+    X_nonFraud = X.loc[Y == 0]
+
+    dfOutDiz = {}
+    dfOutDiz[0] = X
+    dfOutDiz[1] = X_fraud
+    dfOutDiz[2] = X_nonFraud
+    dfOutDiz[3] = Y
+    return dfOutDiz
+
+def dataCleaningAndEngineering(df):
+    X = df.loc[(df.type == 'CASH_OUT') | (df.type == 'TRANSFER')]
+
+
     Y = X['isFraud']
     del X['isFraud']
 
@@ -176,6 +209,11 @@ def dataCleaningAndEngineering(df):
     X.type = X.type.astype(int)
     #print(X.head())
 
+    '''
+        corr_matrix = X.corr()
+        corr_matrix["isFraud"].sort_values(ascending=False)
+        print(corr_matrix)
+    '''
     print(X)
     X_fraud = X.loc[Y == 1]
     X_nonFraud = X.loc[Y == 0]
@@ -205,6 +243,7 @@ def dataCleaningAndEngineering(df):
 #plt.show()
 
 #Fase di Feature Selection che mi sembra fatta bene e anche con ragionamenti non da astrologi :
-# https://www.kaggle.com/georgepothur/4-financial-fraud-detection-xgboost
+#https://www.kaggle.com/georgepothur/4-financial-fraud-detection-xgboost
 
+#dataCleaningAndEngineering(dataFrame)
 

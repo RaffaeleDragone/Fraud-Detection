@@ -3,13 +3,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn import metrics
+from sklearn.metrics import confusion_matrix
 import numpy as np
 import matplotlib.pyplot as plt
 from it.unisa.ds.util import dataUtility as du
 from sklearn.model_selection import KFold, cross_val_score
 dataFrame = du.load_paysim_data()
 
-dataFrameFull = du.dataCleaningAndEngineering(dataFrame)
+dataFrameFull = du.returnDataWithoutCleaning(dataFrame)
 
 dataFrameWithoutLabel = dataFrameFull[0]
 label = dataFrameFull[3]
@@ -31,14 +32,13 @@ def decision_tree_model(depth):
 
     model.fit(X_train, y_train)
 
-    # Apply model to validation data
+    # Applichiamo il modello ai dati
     y_predict = model.predict(X_test)
 
-    # Accuracy
+    # Accuratezza
     print('Accuracy Score:', metrics.accuracy_score(y_test, y_predict))
     print('Accuracy Score Decision Tree: \n', metrics.classification_report(y_test, y_predict))
-
-    from sklearn.metrics import confusion_matrix
+    
     confusion_matx = confusion_matrix(y_test, y_predict)
     print(confusion_matx)
 
@@ -57,7 +57,6 @@ def random_forest_model(depth,n_ests):
     # Accuracy
     print('Accuracy Score Random Forest: \n ', metrics.classification_report(y_test, y_predictForest))
     print('Accuracy Score:', metrics.accuracy_score(y_test, y_predictForest))
-    from sklearn.metrics import confusion_matrix
     confusion_matx = confusion_matrix(y_test, y_predictForest)
     print(confusion_matx)
 
@@ -95,7 +94,7 @@ def run_cross_validation_on_random_forest(X, y, tree_depths, cv=5, scoring='accu
     accuracy_scores = []
     for depth in tree_depths:
         print("Depth : ",str(depth),"\n")
-        tree_model = RandomForestClassifier(max_depth=depth)
+        tree_model = RandomForestClassifier(max_depth=depth, n_estimators=50)
         cv_scores = cross_val_score(tree_model, X, y, cv=cv, scoring=scoring)
         cv_scores_list.append(cv_scores)
         cv_scores_mean.append(cv_scores.mean())
@@ -180,7 +179,7 @@ def cross_validation_split(type_model):
 
 
 
-#decision_tree_model(5)
+decision_tree_model(7)
 #cross_validation_split(0)
 #random_forest_model(5,50)
 # fitting trees of depth 1 to 24
@@ -188,6 +187,6 @@ def cross_validation_split(type_model):
 #sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores = run_cross_validation_on_trees(X_train, y_train,
 #                                                                                        sm_tree_depths)
 
-sm_tree_depths = range(9, 12)
-sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores = run_cross_validation_on_random_forest(X_train, y_train,sm_tree_depths)
-plot_cross_validation_on_trees(sm_tree_depths, sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores, "Cross Validation Random Forest")
+#sm_tree_depths = range(5, 10)
+#sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores = run_cross_validation_on_random_forest(X_train, y_train,sm_tree_depths)
+#plot_cross_validation_on_trees(sm_tree_depths, sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores, "Cross Validation Random Forest")
