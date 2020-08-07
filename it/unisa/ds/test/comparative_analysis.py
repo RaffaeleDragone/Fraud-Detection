@@ -94,3 +94,5 @@ def decision_tree_model(depth, dfX, dfY):
 
 dataFrame = util.load_paysim_data()
 comparing_step1(dataFrame)
+
+comparing_step2(dataFrame)
