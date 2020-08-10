@@ -57,6 +57,52 @@ def comparing_step2(df):
     Y2 = dataFrameStep2[1]
     decision_tree_model(7, X2, Y2)
 
+def comparing_step3(df):
+
+    # Step1 : dataFrame con soltanto CASH_OUT e TRASFER
+    dataFrameStep2 = util.step_2(df)
+
+    X = dataFrameStep2[0]
+    Y = dataFrameStep2[1]
+    decision_tree_model(7, X, Y)
+
+    # Step2 : dataFrame con soltanto CASH_OUT e TRASFER - IsFlaggedFraud
+    dataFrameStep3 = util.step_3(df)
+
+    X2 = dataFrameStep2[0]
+    Y2 = dataFrameStep2[1]
+    decision_tree_model(7, X2, Y2)
+
+def comparing_step4(df):
+
+    # Step1 : dataFrame con soltanto CASH_OUT e TRASFER
+    dataFrameStep3 = util.step_3(df)
+
+    X = dataFrameStep3[0]
+    Y = dataFrameStep3[1]
+    decision_tree_model(7, X, Y)
+
+    # Step2 : dataFrame con soltanto CASH_OUT e TRASFER - IsFlaggedFraud
+    dataFrameStep4 = util.step_4(df)
+
+    X2 = dataFrameStep4[0]
+    Y2 = dataFrameStep4[1]
+    decision_tree_model(7, X2, Y2)
+
+def comparing_step5(df):
+        # Step1 : dataFrame con soltanto CASH_OUT e TRASFER
+        dataFrameStep4 = util.step_4(df)
+
+        X = dataFrameStep4[0]
+        Y = dataFrameStep4[1]
+        decision_tree_model(7, X, Y)
+
+        # Step2 : dataFrame con soltanto CASH_OUT e TRASFER - IsFlaggedFraud
+        dataFrameStep5 = util.step_5(df)
+
+        X2 = dataFrameStep5[0]
+        Y2 = dataFrameStep5[1]
+        decision_tree_model(7, X2, Y2)
 
 def decision_tree_model(depth, dfX, dfY):
     start_time = time.time()
@@ -93,6 +139,6 @@ def decision_tree_model(depth, dfX, dfY):
     print(' - - - - %s seconds - - - ' % (end_time-start_time))
 
 dataFrame = util.load_paysim_data()
-comparing_step1(dataFrame)
+#comparing_step1(dataFrame)
 
 comparing_step2(dataFrame)

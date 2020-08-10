@@ -49,8 +49,8 @@ def step_1(df_orig):
     del X['isFraud']
 
     le = preprocessing.LabelEncoder()
-    X['nameOrig'] = le.fit_transform(X["nameOrig"])
-    X['nameDest'] = le.fit_transform(X["nameDest"])
+    X.nameOrig = le.fit_transform(X.nameOrig)
+    X.nameDest = le.fit_transform(X.nameDest)
 
     dfOutDiz = {}
     dfOutDiz[0] = X
