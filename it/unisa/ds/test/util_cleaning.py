@@ -2,6 +2,10 @@ import os
 import pandas as pd
 import numpy as np
 from collections import Counter
+import matplotlib.pyplot as plt
+
+import warnings
+warnings.filterwarnings("ignore")
 
 from sklearn import preprocessing
 
@@ -28,6 +32,7 @@ def information_dataframe(dataFrame):
 
 def step_1(df_orig):
     df = df_orig.copy()
+
     print('********* Returning origin dataset with only transaction typed as CASH_OUT or TRANSFER . Converted them to 0 and 1 *************')
 
     # Occorrenze delle varie features per le transazioni che risultano essere fraudolente
@@ -40,10 +45,16 @@ def step_1(df_orig):
     print('Transazioni Fraudolente TRANSFER', len(df.loc[(df.isFraud==1) & (df.type == 'TRANSFER')]))
     print('Transazioni Fraudolente CASH_OUT', len(df.loc[(df.isFraud == 1) & (df.type == 'CASH_OUT')]))
 
+
+
     X = df.loc[(df.type == 'CASH_OUT') | (df.type == 'TRANSFER')]
     X.loc[X.type == 'TRANSFER', 'type'] = 0
     X.loc[X.type == 'CASH_OUT', 'type'] = 1
     X.type = X.type.astype(int)
+
+    pieChart = pd.value_counts(X['isFraud'], sort=True).sort_index() \
+        .plot(kind='pie', title="Transazioni Fraudolente")
+    plt.show()
 
     Y = X['isFraud']
     del X['isFraud']
@@ -63,14 +74,26 @@ def step_2(df_orig):
           ' Removed attribute IsFlaggedFraud *************')
     # Occorrenze delle varie features per le transazioni che risultano essere fraudolente
     # IS_FLAGGED
-    isFlaggedFraud_list = list(df.loc[df.isFraud == 1].isFlaggedFraud.values)
+
+    isFlaggedFraud_list = list(df.isFlaggedFraud.values)
     isFlaggedFraud_counted_list = Counter(isFlaggedFraud_list)
-    print(isFlaggedFraud_counted_list.most_common(20), '\n')
+    print(isFlaggedFraud_counted_list.most_common(), '\n')
 
     X = df.loc[(df.type == 'CASH_OUT') | (df.type == 'TRANSFER')]
     X.loc[X.type == 'TRANSFER', 'type'] = 0
     X.loc[X.type == 'CASH_OUT', 'type'] = 1
     X.type = X.type.astype(int)
+
+    dfFlagged = df.loc[df.isFlaggedFraud == 1]
+    dfNotFlagged = df.loc[df.isFlaggedFraud == 0]
+
+    print('\n La origine delle transazioni isFlaggedFraud si ripetono ? \
+     {}' \
+          .format((dfFlagged.nameOrig.isin(pd.concat([dfNotFlagged.nameOrig, \
+                                                      dfNotFlagged.nameDest]))).any()))  # False
+
+    print('\n I destinatari delle transazioni isFlaggedFraud risultano essere Origine su altre transazioni ? \
+    {}'.format((dfFlagged.nameDest.isin(dfNotFlagged.nameOrig)).any()))  # False
 
     del X['isFlaggedFraud']
 

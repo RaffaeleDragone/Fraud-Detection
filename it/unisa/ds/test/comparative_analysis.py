@@ -8,6 +8,8 @@ from sklearn.metrics import confusion_matrix
 from it.unisa.ds.test import util_cleaning as util
 import time
 
+import warnings
+warnings.filterwarnings("ignore")
 
 
 
@@ -119,8 +121,8 @@ def decision_tree_model(depth, dfX, dfY):
     # criterion = "gini | default " - entropy ".
     # splitter = "best | default " - "random".
     # max_depth = "None | default " -
-    model = DecisionTreeClassifier(max_depth=depth)
-
+    #model = DecisionTreeClassifier(max_depth=depth)
+    model = DecisionTreeClassifier()
     model.fit(X_train, y_train)
 
     # Applichiamo il modello ai dati
