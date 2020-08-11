@@ -179,9 +179,9 @@ def cross_validation_split(type_model):
 
 
 
-decision_tree_model(7)
+#decision_tree_model(7)
 #cross_validation_split(0)
-#random_forest_model(5,50)
+random_forest_model(7,50)
 # fitting trees of depth 1 to 24
 #sm_tree_depths = range(1, 20)
 #sm_cv_scores_mean, sm_cv_scores_std, sm_accuracy_scores = run_cross_validation_on_trees(X_train, y_train,

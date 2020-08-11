@@ -4,6 +4,8 @@ import os
 #import kaggle
 import kaggle
 import pandas as pd
+from sklearn import preprocessing
+
 pd.set_option('display.float_format', lambda x: '%.5f' % x)
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
@@ -40,6 +42,7 @@ def information_dataframe(dataFrame):
 
 
 
+
     #Nella guida fa vedere come isFlaggedFraud non è correlato con nessun altro campo. Quindi dice che poiché tra l'altro ci sono solo 16 record con tale valore lo scarta
     #Decidiamo poi se metterci questo ragionamento
 
@@ -49,11 +52,15 @@ def information_numeric_data(dataFrame):
 
 def normalize_dataset(df):
     X = df.loc[(df.type == 'TRANSFER') | (df.type == 'CASH_OUT')]
+
     Y = X['isFraud']
+
     del X['isFraud']
 
     # Eliminate columns shown to be irrelevant for analysis in the EDA
     X = X.drop(['nameOrig', 'nameDest', 'isFlaggedFraud'], axis=1)
+
+
     return X
     #Ci sono altre operazioni che possono essere effettuate. Ho trovate alcune discussioni :
     #https://www.kaggle.com/netzone/eda-and-fraud-detection
@@ -155,6 +162,17 @@ def dataCleaning(df):
     X_fraud = X.loc[Y == 1]
     X_nonFraud = X.loc[Y == 0]
 
+    Xfraud = X.loc[Y == 1]
+    XnonFraud = X.loc[Y == 0]
+    print('\nLa percentuale di transazioni fraudolente con \'oldBalanceDest\' = \
+    \'newBalanceDest\' = 0 con una transazione con \'amount\' diverso da 0 è: {}'. \
+          format(len(Xfraud.loc[(Xfraud.oldbalanceDest == 0) & \
+                                (Xfraud.newbalanceDest == 0) & (Xfraud.amount)]) / (1.0 * len(Xfraud))))
+
+    print('\nLa percentuale di transazioni non fraudolente con \'oldBalanceDest\' = \
+    newBalanceDest\' = 0 con una transazione con \'amount\' diverso da 0 è: {}'. \
+          format(len(XnonFraud.loc[(XnonFraud.oldbalanceDest == 0) & \
+                                   (XnonFraud.newbalanceDest == 0) & (XnonFraud.amount)]) / (1.0 * len(XnonFraud))))
     dfOutDiz = {}
     dfOutDiz[0]=X
     dfOutDiz[1]=X_fraud
@@ -168,7 +186,7 @@ def returnDataWithoutCleaning(df):
     randomState = 5
     np.random.seed(randomState)
     Y = X['isFraud']
-    #del X['isFraud']
+    del X['isFraud']
 
    # del X['nameDest']
    # del X['nameOrig']
@@ -179,6 +197,9 @@ def returnDataWithoutCleaning(df):
     X.loc[X.type == 'CASH_IN', 'type'] = 3
     X.loc[X.type == 'DEBIT', 'type'] = 4
     #X.type = X.type.astype(int)
+    le = preprocessing.LabelEncoder()
+    X["nameOrig"]= le.fit_transform(X["nameOrig"])
+    X["nameDest"] = le.fit_transform(X["nameDest"])
     # print(X.head())
     X_fraud = X.loc[Y == 1]
     X_nonFraud = X.loc[Y == 0]
@@ -227,12 +248,12 @@ def dataCleaningAndEngineering(df):
 
 
 
-#dataFrame = load_paysim_data()
+dataFrame = load_paysim_data()
 
 #information_dataframe(dataFrame)
 #information_numeric_data(dataFrame)
 
-#feature_selection(dataFrame)
+dataCleaning(dataFrame)
 #dataCleaning(dataFrame)
 #df_normalized = normalize_dataset(dataFrame)
 

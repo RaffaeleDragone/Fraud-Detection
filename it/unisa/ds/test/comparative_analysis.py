@@ -71,8 +71,8 @@ def comparing_step3(df):
     # Step2 : dataFrame con soltanto CASH_OUT e TRASFER - IsFlaggedFraud
     dataFrameStep3 = util.step_3(df)
 
-    X2 = dataFrameStep2[0]
-    Y2 = dataFrameStep2[1]
+    X2 = dataFrameStep3[0]
+    Y2 = dataFrameStep3[1]
     decision_tree_model(7, X2, Y2)
 
 def comparing_step4(df):
@@ -143,4 +143,4 @@ def decision_tree_model(depth, dfX, dfY):
 dataFrame = util.load_paysim_data()
 #comparing_step1(dataFrame)
 
-comparing_step2(dataFrame)
+comparing_step5(dataFrame)
