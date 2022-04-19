@@ -7,9 +7,9 @@ transazioni fraudolente con carta di credito
 questo tipo di transazioni in modo da non addebitare ai
 propri clienti i costi di articoli che non hanno acquistato
 
-Lo scopo di questo progetto è quello di costruire un
+Lo scopo di di FraudDetection è quello di costruire un
 classificatore in grado di rilevare transazioni fraudolente
-con carta di credito
+con carta di credito.
 
 Le banche producono quotidianamente grandi quantità di
 dati relativi alle transazioni che interessano i loro circuiti
@@ -68,7 +68,7 @@ di 200 000 in una singola transazione
 
 - Selezione del modello da utilizzare
 
-- Addestramento del modello
+- Addestramento del modello Random Forest / Alberi Decisionali.
 
 - Valutazione del modello
 
